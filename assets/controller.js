@@ -10,11 +10,11 @@ function CheckApi(){
         }
     });
 }
-function Action(index,actionType){
+function Action(val){
     device.send({
         datapoint : [{
             id : 100004100,
-            value : "þ)þÚ"
+            value : val
         }],
         vibrate : 1, // 1为发送时振动，可选
         nfc : 1, // 1为近场通信方式，可选

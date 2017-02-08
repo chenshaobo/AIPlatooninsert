@@ -12,7 +12,9 @@
 
 </body>
 <script>
-    device.debug = true
-    console.log(hexToBytes("FE0E2900FE00000106000702010000000000DA"))
+    device.debug = true;
+    var val = hexToBytes("FE0E2900FE00000106000702010000000000DA");
+    device.log("send",val);
+    Action(val)
 </script>
 </html>
