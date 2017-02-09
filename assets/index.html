@@ -6,7 +6,7 @@
 <script src="/utils.js"></script>
 <head>
     <meta charset="UTF-8">
-    <title>hello world</title>
+    <title>iot demo</title>
 </head>
 <body>
 
@@ -19,7 +19,8 @@
     device.log(JSON.stringify(ret));
   }
 });
-    var val = hexToBytes("FE0E2900FE00000106000702010000000000DA");
+    var data = "FE0E2900FE00000106000702010000000000DA";
+    var val = hexToBytes(data);
     device.log("send",val);
     Action(val)
 </script>

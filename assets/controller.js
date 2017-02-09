@@ -14,6 +14,7 @@ function Action(val){
     device.send({
         datapoint : [{
             id : 100004100,
+            type: 'bytearray',
             value : val
         }],
        // vibrate : 1, // 1为发送时振动，可选
