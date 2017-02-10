@@ -1,14 +1,14 @@
 <!DOCTYPE html>
 <html lang="en">
 <script src="http://qzonestyle.gtimg.cn/open/mobile/light_app/js/device.js"></script>
-<!--<script src="/device.js"></script>-->
-<script src="/controller.js"></script>
-<script src="/utils.js"></script>
 <head>
     <meta charset="UTF-8">
     <title>iot demo</title>
 </head>
 <body>
+<!--<div id="tarbar" ></div>-->
+    <div id="req"></div>
+    <script src="/dist/build.js"></script>
 
 </body>
 <script>
@@ -19,9 +19,9 @@
     device.log(JSON.stringify(ret));
   }
 });
-    var data = "FE0E2900FE00000106000702010000000000DA";
+  /*  var data = "FE0E2900FD00000106000702010000000000DA";
     var val = hexToBytes(data);
     device.log("send",val);
-    Action(val)
+    Action(val)*/
 </script>
 </html>
