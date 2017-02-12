@@ -4,7 +4,6 @@ import 'mint-ui/lib/style.css'
 import App from './App.vue'
 import './utils.js'
 import './controller.js'
-
 import Req from './view/req.vue'
 //Vue.use(MintUI);
 Vue.component(Tabbar.name,Tabbar);

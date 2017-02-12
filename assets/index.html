@@ -9,19 +9,8 @@
 <!--<div id="tarbar" ></div>-->
     <div id="req"></div>
     <script src="/dist/build.js"></script>
-
 </body>
 <script>
     device.debug = true;
-    device.checkApi({
-  list : ['send', 'sendShareMsg'], // API列表
-  onSuccess : function (ret) { // 检查结果
-    device.log(JSON.stringify(ret));
-  }
-});
-  /*  var data = "FE0E2900FD00000106000702010000000000DA";
-    var val = hexToBytes(data);
-    device.log("send",val);
-    Action(val)*/
 </script>
 </html>
