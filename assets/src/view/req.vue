@@ -37,18 +37,6 @@
             },
             handleQueryNodes() {
                 action("FE0425010000010021");
-                device.onServerPush(function(data) {
-                    device.log(JSON.stringify(data));
-                    if (data.key == 'DPPushNotify' && data.value) {
-                        device.query({
-                            list: data.value.PropIDs,
-                            onSuccess: function(ret) {
-                                device.log('onSuccess: ' + JSON.stringify(ret));
-                                // do something
-                            }
-                        });
-                    }
-                });
             }
         }
     }
