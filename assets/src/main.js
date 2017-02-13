@@ -6,6 +6,8 @@ import './utils.js'
 import './controller.js'
 import Req from './view/req.vue'
 Vue.use(MintUI);
+Vue.config.devtools = true
+
 /*Vue.component(Tabbar.name,Tabbar);
 Vue.component(TabItem.name,TabItem);
 Vue.component(TabContainer.name,TabContainer);
