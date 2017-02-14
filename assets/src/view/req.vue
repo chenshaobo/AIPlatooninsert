@@ -1,5 +1,5 @@
 <template>
-  <div id="req">
+    <div id="req">
     <div class="page-part">
     <mt-field label="发送自定义数据" placeholder="FE0000001" v-model="customHex" :value="customHex"></mt-field>
     <mt-button @click.native="handleClick(data)" :value="customHex">发送自定义数据{{ customHex }}</mt-button>
@@ -16,12 +16,8 @@
 </template>
 
 <script>
-    import {
-        hexToBytes,Base64ToByteArray
-    } from '../utils.js';
-    import {
-        action
-    } from '../controller.js';
+    import Utils from "../utils.js";
+    import {action} from '../controller.js';
    import Proto from "../proto.js";
     export default {
         name: 'req',
@@ -43,13 +39,18 @@
                 action("FE0425010000010021");
             },
 	    handleTestFunc(){
-	          var byteArray = Base64ToByteArray("/g9FgQASOfwKAEsSAAAAAAGdFsU=");
+		  var v = "/gQlAQAAAQAh";
+	          var byteArray = Utils.Base64ToByteArray(v);
 		  console.log(Array.apply([],byteArray).join(","));
 		  var proto = Proto.Unmarshal(byteArray);
 		  console.log(proto);
-		var proto1 = Proto.UnmarshalBase64("/g9FgQASOfwKAEsSAAAAAAGdFsU=");
+		var proto1 = Proto.UnmarshalBase64(v);
 		console.log(proto1);
 		console.log("unmarshal result " ,JSON.stringify(proto),JSON.stringify(proto1));
+                console.log("tohexstring " ,Utils.toHexString(byteArray));
+ device.log('serverPushData: ' + Utils.toHexString(Utils.Base64ToByteArray(v)));
+
+	        window.alert("单元测试ok");
 	    }
         }
     }

@@ -1,9 +1,7 @@
 /**
- * Created by lx on 17/2/8.
+ * Created by lx on 17/2/8
  */
-import {
-    hexToBytes,Base64ToByteArray
-} from "./utils.js";
+import Utils  from "./utils.js";
 import Proto from "./proto.js";
 
 var id = 100004100;
@@ -19,7 +17,7 @@ function checkApi() {
 }
 
 function action(val) {
-    var dataArray = hexToBytes(val);
+    var dataArray = Utils.hexToBytes(val);
     device.send({
         datapoint: [{
             id: id,
@@ -56,7 +54,7 @@ function getData() {
                     device.log('get data succes: ' + JSON.stringify(ret));
                     ret.list.forEach(function(data) {
                         device.log('value =' + JSON.stringify(data));
-                        device.log( Base64ToByteArray(data.val_list[0].val));
+                        device.log('serverPushData: ' ,Utils.Base64ToByteArray(data.val_list[0].val), Utils.toHexString(Utils.Base64ToByteArray(data.val_list[0].val)));
                         var proto = Proto.UnmarshalBase64(data.val_list[0].val);
                         device.log('unmarshal data ' + JSON.stringify(proto));
                     });
