@@ -2,43 +2,43 @@ import Utils from "./utils.js";
 const startFrame = 254;
 var protoType = {
     QUERY_NODES_REQ: {
-        cmdType: 0x2501,
+        cmd: 0x2501,
         name: 'QUERY_NODES_REQ'
     },
     QUERY_NODES_RES: {
-        cmdType: 0x4581,
+        cmd: 0x4581,
         name: 'QUERY_NODES_REQ'
     },
     SET_NODE_REQ: {
-        cmdType: 0x2900,
+        cmd: 0x2900,
         name: 'NODE_INFO_REQ'
     },
     SET_NODE_RES: {
-        cmdType: 0x4900,
+        cmd: 0x4900,
         name: 'NODE_INFO_RES'
     },
     QUERY_NODE_BIND_REQ: {
-        cmdType: 0x2533,
+        cmd: 0x2533,
         name: 'QUERY_NODE_BIND_REQ'
     },
     QUERY_NODE_BIND_RES: {
-        cmdType: 0x4583,
+        cmd: 0x4583,
         name: 'QUERY_NODE_BIND_RES'
     },
     SET_NODE_BIND_REQ: {
-        cmdType: 0x2521,
+        cmd: 0x2521,
         name: 'SET_NODE_BIND_REQ'
     },
     SET_NODE_BIND_RES: {
-        cmdType: 0x45A1,
+        cmd: 0x45A1,
         name: 'SET_NODE_BIND_REQ'
     },
     SET_NODE_UNBIND_REQ: {
-        cmdType: 0x2522,
+        cmd: 0x2522,
         name: 'SET_NODE_UNBIND_REQ'
     },
     SET_NODE_UNBIND_RES: {
-        cmdType: 0x45A2,
+        cmd: 0x45A2,
         name: 'SET_NODE_UNBIND_RES'
     }
 };
@@ -46,9 +46,9 @@ var protoType = {
 function parseType(Type) {
     var tmp;
     switch (Type) {
-        case protoType.QUERY_NODES_REQ.cmdType:
+        case protoType.QUERY_NODES_REQ.cmd:
             tmp = protoType.QUERY_NODES_REQ;
-        case protoType.QUERY_NODES_RES.cmdType:
+        case protoType.QUERY_NODES_RES.cmd:
             tmp = protoType.QUERY_NODES_RES;
     }
     console.log("parseType : " + Type + "'s cmdInfo is " + JSON.stringify(tmp));
@@ -59,9 +59,10 @@ class Proto {
     constructor(len, cmd, data) {
         this.Len = data.length;
         this.data = data;
-        this.cmd = cmd;
-        var cmdType = (cmd[0] << 8) + cmd[1];
-        this.cmdInfo = parseType(cmdType);
+        //this.cmd = cmd;
+        this.cmd = (cmd[0] << 8) + cmd[1];
+        var cmdInfo = parseType(cmd);
+      this.cmdName = cmdInfo.name;
     }
     /*
       数组去除头和尾再进行异或校验
@@ -81,17 +82,33 @@ class Proto {
             throw 'Data not start with SOF';
         }
         if (this.checkFCS(byteArray)) {
-            throw 'FCS not match'
+          throw 'FCS not match';
         }
         var len = byteArray[1];
         var cmd = byteArray.slice(2, 4);
         var data = byteArray.slice(4, 4 + len);
-        //console.log(len, cmd, data); 
         return new Proto(len, cmd, data);
     }
     static UnmarshalBase64(base64) {
         return this.Unmarshal(Utils.Base64ToByteArray(base64));
     }
+  static marshal(cmd,dataArray){
+    var msg = new BufferMaker();
+    msg.UInt8(startFrame);
+    msg.UInt8(0);//len
+    msg.UInt8(cmd);
+    if (cb){
+      cb(msg);
+    }
+    msg.UInt8(0);//fcs
+    var buffer = msg.make();
+    var xorResult = 0;
+    for (var i=4;i < buffer.length-1;i++){
+      xorResult = buffer[i] ^ xorResult;
+    }
+    buffer[i+1] = xorResult;
+    return buffer;
+  }
 }
 
 export default Proto;
