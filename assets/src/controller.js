@@ -54,7 +54,7 @@ function getData() {
                     device.log('get data succes: ' + JSON.stringify(ret));
                     ret.list.forEach(function(data) {
                         device.log('value =' + JSON.stringify(data));
-                        device.log('serverPushData: '+  Utils.toHexString(Utils.Base64ToByteArray(data.val_list[0].val)));
+                        device.log('serverPushData: ' +  Utils.toHexString(Utils.Base64ToByteArray(data.val_list[0].val)));
                         var proto = Proto.UnmarshalBase64(data.val_list[0].val);
                         device.log('unmarshal data ' + JSON.stringify(proto));
                     });
