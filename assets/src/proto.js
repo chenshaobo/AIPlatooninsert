@@ -70,7 +70,7 @@ class Proto {
     }
     static doHandle(cmd,data) {
         var tmp;
-        var result = "";
+        var result = "success";
         device.log("enter doHandle:" + cmd);
         switch (cmd) {
             case protoType.QUERY_NODES_REQ.cmd:

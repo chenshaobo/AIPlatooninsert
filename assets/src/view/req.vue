@@ -29,10 +29,8 @@
         methods: {
             handleClick() {
                 if (this.customHex != "") {
-                    var tmp = new String(this.customHex);
-                    var val = hexToBytes(tmp);
-                    console.log("send ", val);
-                    action(val);
+                    device.log("send custom data:" + this.customHex);
+                    Controller.sendHex(val);
                 }
             },
             handleQueryNodes() {
@@ -42,11 +40,11 @@
 		  var v = "/gQlAQAAAQAh";
 	          var byteArray = Utils.Base64ToByteArray(v);
 		  console.log(Array.apply([],byteArray).join(","));
-		  var proto = Proto.handle(byteArray);
-		  console.log(proto);
-		var proto1 = Proto.handleBase64(v);
-		console.log(proto1);
-		console.log("unmarshal result " ,JSON.stringify(proto),JSON.stringify(proto1));
+		  var result = Proto.handle(byteArray);
+		  console.log(result);
+		var result1= Proto.handleBase64(v);
+		console.log(result1);
+		console.log("result " ,JSON.stringify(result),JSON.stringify(result1));
                 console.log("tohexstring " ,Utils.toHexString(byteArray));
  device.log('serverPushData: ' + Utils.toHexString(Utils.Base64ToByteArray(v)));
 

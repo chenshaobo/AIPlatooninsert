@@ -18,9 +18,10 @@ class Controller {
 
     static sendHex(val) {
         var dataArray = Utils.hexToBytes(val);
-        send(dataArray);
+        this.send(dataArray);
     }
     static send(dataArray){
+        device.log("send:" + Utils.toHexString(dataArray));
         device.send({
             datapoint: [{
                 id: id,
