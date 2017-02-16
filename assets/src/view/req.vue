@@ -17,7 +17,7 @@
 
 <script>
     import Utils from "../utils.js";
-    import {action} from '../controller.js';
+    import Controller from '../controller.js';
    import Proto from "../proto.js";
     export default {
         name: 'req',
@@ -36,15 +36,15 @@
                 }
             },
             handleQueryNodes() {
-                action("FE0425010000010021");
+                Controller.sendHex("FE0425010000010021");
             },
 	    handleTestFunc(){
 		  var v = "/gQlAQAAAQAh";
 	          var byteArray = Utils.Base64ToByteArray(v);
 		  console.log(Array.apply([],byteArray).join(","));
-		  var proto = Proto.Unmarshal(byteArray);
+		  var proto = Proto.handle(byteArray);
 		  console.log(proto);
-		var proto1 = Proto.UnmarshalBase64(v);
+		var proto1 = Proto.handleBase64(v);
 		console.log(proto1);
 		console.log("unmarshal result " ,JSON.stringify(proto),JSON.stringify(proto1));
                 console.log("tohexstring " ,Utils.toHexString(byteArray));
