@@ -7,8 +7,9 @@
 
     <div class="page-part">
 	<mt-button @click.native="handleQueryNodes">查询节点列表</mt-button>
-	
+	<p id="nodeList">{{ nodes }} </p>
 	</div>
+  
 	<div class="page-part">
 	    <mt-button @click.native="handleTestFunc">单元测试</mt-button>
 	    </div>
@@ -19,14 +20,35 @@
     import Utils from "../utils.js";
     import Controller from '../controller.js';
    import Proto from "../proto.js";
+import store from "../vuex/store.js";
+import {setNodes} from "../vuex/action.js";
+import Bus from "../bus.js";
     export default {
         name: 'req',
+        store: store,
         data() {
             return {
                 customHex: ""
             }
+            
+        },
+        vuex:{
+            getters: {
+                nodes: state => JSON.stringifg(state.nodes),
+                },
+            actions:{
+                setNodes
+            }
         },
         methods: {
+            saveNodes(){
+                Bus.$on('add-node',function(node){
+                    console.log(this);
+                    device.log("add node" + JSON.stringify(node)); 
+                    store.commit('SAVE_NODE',node);
+                });
+ 
+                },
             handleClick() {
                 if (this.customHex != "") {
                     device.log("send custom data:" + this.customHex);
@@ -35,19 +57,15 @@
             },
             handleQueryNodes() {
                 Controller.sendHex("FE0425010000010021");
+                this.saveNodes();
             },
 	    handleTestFunc(){
+       this.saveNodes();
 		  var v = "/gQlAQAAAQAh";
 	          var byteArray = Utils.Base64ToByteArray(v);
-		  console.log(Array.apply([],byteArray).join(","));
 		  var result = Proto.handle(byteArray);
-		  console.log(result);
 		var result1= Proto.handleBase64(v);
-		console.log(result1);
-		console.log("result " ,JSON.stringify(result),JSON.stringify(result1));
-                console.log("tohexstring " ,Utils.toHexString(byteArray));
  device.log('serverPushData: ' + Utils.toHexString(Utils.Base64ToByteArray(v)));
-
 	        window.alert("单元测试ok");
 	    }
         }

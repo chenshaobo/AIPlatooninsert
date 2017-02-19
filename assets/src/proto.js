@@ -68,48 +68,48 @@ class Proto {
             "orgin = " + byteAarray[byteAarray.length - 1]);
         return xorResult == byteAarray[i + 1];
     }
-    static doHandle(cmd,data) {
+    static doHandle(cmd, data) {
         var tmp;
         var result = "success";
-        device.log("enter doHandle:" + cmd);
         switch (cmd) {
             case protoType.QUERY_NODES_REQ.cmd:
                 tmp = protoType.QUERY_NODES_REQ;
-            result = Controller.doQueryNodes(data);
-            break;
+                break;
             case protoType.QUERY_NODES_RES.cmd:
                 tmp = protoType.QUERY_NODES_RES;
-            break;
+                result = Controller.doSaveNode(data);
+                break;
             case protoType.SET_NODE_REQ.cmd:
                 tmp = protoType.SET_NODE_REQ;
-            result = Controller.doSetNode(data);
-            break;
+                break;
             case protoType.SET_NODE_RES.cmd:
                 tmp = protoType.SET_NODE_RES;
-            break;
+            result = Controller.doSetNodeRes(data);
+                break;
             case protoType.QUERY_NODE_BIND_REQ.cmd:
                 tmp = protoType.QUERY_NODE_BIND_REQ;
-            result = Controller.doQueryNodeBind(data);
-            break;
+                break;
             case protoType.SET_NODE_RES.cmd:
                 tmp = protoType.SET_NODE_RES;
-            break;
-            case protoType.SET_NODE_REQ.cmd:
-                tmp = protoType.SET_NODE_REQ;
-            result = Controller.doSetNode(data);
-            break;
+            result = Controller.doQueryNodeBindRes(data);
+
+                break;
             case protoType.SET_NODE_UNBIND_RES.cmd:
                 tmp = protoType.SET_NODE_BIND_RES;
-            break;
+            result = Controller.doSetNodeBindRes(data);
+                break;
             case protoType.SET_NODE_UNBIND_REQ.cmd:
                 tmp = protoType.SET_NODE_BIND_REQ;
-            result = Controller.doSetNodeBind(data);
+                break;
+        case protoType.QUERY_NODE_BIND_REQ.cmd:
+            tmp = protoType.QUERY_NODE_BIND_REQ;
             break;
             case protoType.QUERY_NODE_BIND_RES.cmd:
                 tmp = protoType.QUERY_NODE_BIND_RES;
-            break;
+            result= Controller.doQueryNodeBindRes(date);
+                break;
         }
-        device.log("DoHandle: " + JSON.stringify(tmp) + "\nresult is:" + result);
+        device.log("DoHandle: " + JSON.stringify(tmp));
         return result;
     }
     static handle(byteArray) {
@@ -119,10 +119,11 @@ class Proto {
         if (this.checkFCS(byteArray)) {
             throw 'FCS not match';
         }
+        console.log("handle raw data:", byteArray);
         var len = byteArray[1];
         var cmd = (byteArray[2] << 8) + byteArray[3];
         var data = byteArray.slice(4, 4 + len);
-        this.doHandle(cmd,data);
+        return this.doHandle(cmd, data);
     }
     static handleBase64(base64) {
         return this.handle(Utils.Base64ToByteArray(base64));
@@ -147,4 +148,6 @@ class Proto {
 }
 
 export default Proto;
-export {protoType};
+export {
+    protoType
+};

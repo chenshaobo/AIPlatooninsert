@@ -3,7 +3,8 @@
  */
 import Utils from "./utils.js";
 import Proto from "./proto.js";
-
+import Node from "./node.js";
+import Bus from "./bus.js";
 var id = 100004100;
 var regReceive = false;
 class Controller {
@@ -22,6 +23,11 @@ class Controller {
     }
     static send(dataArray){
         device.log("send:" + Utils.toHexString(dataArray));
+        if (!regReceive) {
+            this.receive();
+            regReceive = true;
+        }
+
         device.send({
             datapoint: [{
                 id: id,
@@ -67,19 +73,34 @@ class Controller {
             }
         });
     }
-    static doQueryNodes(data){
-        device.log("doHndleQueryNodes:");
+    static doSaveNode(data){
+        console.log("doHndleQueryNodes:",data);
+        status = data[0] ;
+        if (status == 0x00){
+            var ieeeAddr = data.slice(1,9);
+            var nwkAddr = data.slice(9,11);
+            var startIndex = data[11];
+            var NumAssocDey = data[12];
+            var node = new Node(ieeeAddr,nwkAddr);
+            var childNodes = new Array();
+            for (var i = startIndex;i < startIndex+NumAssocDey;i++){
+                var childNode =  new Node([],nwkAddr);
+                childNodes.push(nwkAddr);
+                //@todo queryChildNodes change to static func
+                childNode.queryChildNodes();
+            }
+            node.appendChildNodes(childNodes);
+            Bus.$emit('add-node',node);
+        }
+        return [];
     }
-    static doSetNode(data){
+    static doSetNodeRes(data){
         device.log("doSetNode");
     }
-    static doQueryNodeBind(data){
+    static doQueryNodeBindRes(data){
         device.log("doQueryNodeBind");
     }
-    static doSetNode(data){
-        device.log("doSetNode");
-    }
-    static doSetNodeBind(data){
+    static doSetNodeBindRes(data){
         device.log("doSetNodeBind");
     }
     }
