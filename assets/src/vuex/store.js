@@ -20,6 +20,7 @@ state.nodes = store.get('nodes') !== undefined ? store.get('nodes') : new Array(
 console.log("nodes", state.nodes);
 const mutations = {
     ['SAVE_NODE'](state, node) {
+        device.log("enter save node " + JSON.stringify(node));
         state.nodes.find((e, index) => {
             if (e.ieeeAddrStr === node.ieeeAddrStr) {
                 state.nodes.splice(index,1);

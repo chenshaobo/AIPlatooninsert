@@ -16,7 +16,9 @@ class Controller {
             }
         });
     }
-
+    static sendCMD(cmd,cb){
+        this.send(Proto.marshal(cmd,cb));
+    }
     static sendHex(val) {
         var dataArray = Utils.hexToBytes(val);
         this.send(dataArray);
@@ -74,22 +76,27 @@ class Controller {
         });
     }
     static doSaveNode(data){
-        console.log("doHndleQueryNodes:",data);
+        device.log("doSaveNodes:" + JSON.stringify(data));
         status = data[0] ;
         if (status == 0x00){
+            //@todo get local node
             var ieeeAddr = data.slice(1,9);
             var nwkAddr = data.slice(9,11);
             var startIndex = data[11];
-            var NumAssocDey = data[12];
+            var NumAssocDev = data[12];
             var node = new Node(ieeeAddr,nwkAddr);
             var childNodes = new Array();
-            for (var i = startIndex;i < startIndex+NumAssocDey;i++){
+            for (var i = 0;i < NumAssocDev;i++){
+                var s = 13 + i;
+                var e = 13+i+2;
+                var childNwkAddr = data.slice(s,e);
                 var childNode =  new Node([],nwkAddr);
-                childNodes.push(nwkAddr);
+                childNodes[i+startIndex] = childNwkAddr;
                 //@todo queryChildNodes change to static func
                 childNode.queryChildNodes();
             }
             node.appendChildNodes(childNodes);
+            device.log("start add node" + JSON.stringify(node));
             Bus.$emit('add-node',node);
         }
         return [];

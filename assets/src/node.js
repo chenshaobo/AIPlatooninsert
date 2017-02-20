@@ -13,15 +13,22 @@ class Node {
 
 
     appendChildNodes(childNodes){
-        this.childNodes.concat(childNodes);
+        device.log("defore append"+ JSON.stringify(this.childNodes));
+        this.childNodes = this.childNodes.concat(childNodes);
+        device.log("after append" + JSON.stringify(this.childNodes) +"\n"+JSON.stringify(childNodes));
     }
 
     queryChildNodes(){
-        var cmd = protoType.QUERY_NODE_REQ.cmd;
-        var data = [this.nwkAddr[0],this.nwkAddr[1],0x01,0x00];
-        Controller.sendCMD(cmd,data);
+        var cmd = protoType.QUERY_NODES_REQ.cmd;
+        var nwkAddr = this.nwkAddr;
+        console.log(this.nwkAddr);
+        Controller.sendCMD(cmd,function(msg){
+            msg.UInt8(nwkAddr[0]);
+            msg.UInt8(nwkAddr[1]);
+            msg.UInt8(0x01);
+            msg.UInt8(0x00);
+        });
     }
-
 }
 
 export default Node;

@@ -65,7 +65,7 @@ import Bus from "../bus.js";
 	          var byteArray = Utils.Base64ToByteArray(v);
 		  var result = Proto.handle(byteArray);
 		var result1= Proto.handleBase64(v);
- device.log('serverPushData: ' + Utils.toHexString(Utils.Base64ToByteArray(v)));
+          var queryNodesRes = Proto.handleHex("FE134581001239FC0A004B120000000003F7EE5BD7DBA5BB");
 	        window.alert("单元测试ok");
 	    }
         }
