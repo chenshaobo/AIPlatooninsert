@@ -13,6 +13,11 @@
 	<div class="page-part">
 	    <mt-button @click.native="handleTestFunc">单元测试</mt-button>
 	    </div>
+	<div class="page-part">
+	    <mt-button @click.native="handleClear">清除localStorage</mt-button>
+	    </div>
+
+
   </div>
 </template>
 
@@ -23,6 +28,7 @@
 import store from "../vuex/store.js";
 import {setNodes} from "../vuex/action.js";
 import Bus from "../bus.js";
+var localStore = require('store');
     export default {
         name: 'req',
         store: store,
@@ -43,11 +49,12 @@ import Bus from "../bus.js";
         methods: {
             saveNodes(){
                 Bus.$on('add-node',function(node){
-                    console.log(this);
-                    device.log("add node" + JSON.stringify(node)); 
                     store.commit('SAVE_NODE',node);
                 });
- 
+                },
+            handleClear(){
+                localStore.clear();
+                device.log("清除本地数据成功");
                 },
             handleClick() {
                 if (this.customHex != "") {
@@ -56,10 +63,12 @@ import Bus from "../bus.js";
                 }
             },
             handleQueryNodes() {
+                localStore.clear();
                 Controller.sendHex("FE0425010000010021");
                 this.saveNodes();
             },
 	    handleTestFunc(){
+       localStore.clear();
        this.saveNodes();
 		  var v = "/gQlAQAAAQAh";
 	          var byteArray = Utils.Base64ToByteArray(v);

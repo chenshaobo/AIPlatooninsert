@@ -5,6 +5,7 @@ import Utils from "./utils.js";
 import Proto from "./proto.js";
 import Node from "./node.js";
 import Bus from "./bus.js";
+import {findNodeByIeeeAddr} from "./vuex/store.js";
 var id = 100004100;
 var regReceive = false;
 class Controller {
@@ -68,7 +69,6 @@ class Controller {
                             device.log('value =' + JSON.stringify(data));
                             device.log('serverPushData: ' + Utils.toHexString(Utils.Base64ToByteArray(data.val_list[0].val)));
                             var result = Proto.handleBase64(data.val_list[0].val);
-                            device.log('handle data  ' + JSON.stringify(result));
                         });
                     }
                 });
@@ -80,23 +80,31 @@ class Controller {
         status = data[0] ;
         if (status == 0x00){
             //@todo get local node
-            var ieeeAddr = data.slice(1,9);
-            var nwkAddr = data.slice(9,11);
+ 
+            var ieeeAddr = Utils.toHex(data.slice(1,9));
+            var nwkAddr = Utils.toHex(data.slice(9,11));
             var startIndex = data[11];
             var NumAssocDev = data[12];
-            var node = new Node(ieeeAddr,nwkAddr);
+            var node = findNodeByIeeeAddr(ieeeAddr);
+            device.log("local node is:" +JSON.stringify(node));
+            if (!node){
+                node = new Node({ieeeAddr: ieeeAddr,nwkAddr:nwkAddr});
+            }
+            if (startIndex == 0){
+                node.childNodes = [];
+            }
             var childNodes = new Array();
             for (var i = 0;i < NumAssocDev;i++){
                 var s = 13 + i;
                 var e = 13+i+2;
-                var childNwkAddr = data.slice(s,e);
-                var childNode =  new Node([],nwkAddr);
+                var childNwkAddr = Utils.toHex(data.slice(s,e));
+                var childNode =  new Node({ieeeAddr:[],nwkAddr:nwkAddr});
                 childNodes[i+startIndex] = childNwkAddr;
                 //@todo queryChildNodes change to static func
                 childNode.queryChildNodes();
             }
             node.appendChildNodes(childNodes);
-            device.log("start add node" + JSON.stringify(node));
+            //device.log("start add node" + JSON.stringify(node));
             Bus.$emit('add-node',node);
         }
         return [];

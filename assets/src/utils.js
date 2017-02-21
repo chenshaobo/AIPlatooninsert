@@ -35,5 +35,14 @@ class Utils {
         }
         return s;
     }
+    static toHex(byteArray){
+        var s = "";
+        for (var i = 0; i < byteArray.length; i++) {
+            var b = byteArray[i];
+            var v = hexChar[(b >> 4) & 0x0f] + hexChar[b & 0x0f];
+            s = s + v;
+        }
+        return s;
+    }
 }
 export default Utils;

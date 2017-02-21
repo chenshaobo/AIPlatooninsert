@@ -72,14 +72,12 @@ class Proto {
     static doHandle(cmd, data) {
         var tmp;
         var result = "success";
-        device.log("handle" +JSON.stringify(cmd));
         switch (cmd) {
             case protoType.QUERY_NODES_REQ.cmd:
                 tmp = protoType.QUERY_NODES_REQ;
                 break;
             case protoType.QUERY_NODES_RES.cmd:
                 tmp = protoType.QUERY_NODES_RES;
-            device.log("enter QUERY_NODES_RES");
                 result = Controller.doSaveNode(data);
                 break;
             case protoType.SET_NODE_REQ.cmd:
