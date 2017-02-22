@@ -20,14 +20,8 @@ state.nodes = store.get('nodes') !== undefined ? store.get('nodes') : new Array(
 console.log("nodes", state.nodes);
 const mutations = {
     ['SAVE_NODE'](state, node) {
-        state.nodes.find((e, index) => {
-            if (e.ieeeAddr === node.ieeeAddr) {
-                state.nodes.splice(index,1);
-            }
-        });
-        state.nodes.push(node);
+        saveNode(node,state.nodes);
         device.log("save nodes" + JSON.stringify(state.nodes));
-        store.set('nodes', state.nodes);
     },
     ['DELETE_NODE'](state, ieeeAddr) {
         var index = state.nodes.findIndex((node) => {
@@ -40,17 +34,37 @@ const mutations = {
 
 export var findNodeByIeeeAddr = function(ieeeAddr){
     var nodes = store.get('nodes');
-    device.log("nodes:"+JSON.stringify(nodes)+"ieeeAddr:" +ieeeAddr);
+  device.log("findNodeByIeeeAddr nodes:"+JSON.stringify(nodes)+"ieeeAddr:" +ieeeAddr);
     if (!nodes){
         return false;
     }
-    device.log("find:"+ JSON.stringify(nodes.find((e,index) =>{
-        return e.ieeeAddr === ieeeAddr;})));
     var nodeData = nodes.find((e,index) =>{
         return e.ieeeAddr === ieeeAddr;
     });
     return new Node(nodeData);
 };
+export var findNodeByNwkAddr = function(nwkAddr){
+  var nodes = store.get('nodes');
+  device.log("find node by nwkAddr,nodes:"+JSON.stringify(nodes)+"  nwkAddr:" +nwkAddr);
+  if (!nodes){
+    return false;
+  }
+  var nodeData = nodes.find((e,index) =>{
+    return e.nwkAddr === nwkAddr;
+  });
+  return new Node(nodeData);
+};
+
+export var saveNode = function(node,nodes){
+  nodes.find((e, index) => {
+    if (e.ieeeAddr === node.ieeeAddr) {
+      nodes.splice(index,1);
+    }
+  });
+  nodes.push(node);
+  store.set('nodes', nodes);
+  device.log("save node result:",store.get('nodes'));
+}
 const actions = {};
 export default new Vuex.Store({
     state,

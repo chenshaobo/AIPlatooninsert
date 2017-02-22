@@ -6,8 +6,9 @@ import Proto from "./proto.js";
 import Node from "./node.js";
 import Bus from "./bus.js";
 import {
-    findNodeByIeeeAddr
+  findNodeByIeeeAddr,findNodeByNwkAddr,saveNode
 } from "./vuex/store.js";
+var store = require('store');
 var id = 100004100;
 var regReceive = false;
 class Controller {
@@ -79,6 +80,7 @@ class Controller {
     }
     static doSaveNode(data) {
         device.log("doSaveNodes:" + JSON.stringify(data));
+        //@todo use binary libray to parse
         status = data[0];
         if (status == 0x00) {
             var ieeeAddr = Utils.toHex(data.slice(1, 9));
@@ -111,13 +113,42 @@ class Controller {
             }
             node.appendChildNodes(childNodes);
             node.queryNodeName();
-            //device.log("start add node" + JSON.stringify(node));
+
+            device.log("start add node" + JSON.stringify(node));
             Bus.$emit('add-node', node);
         }
         return [];
     }
     static doSetNodeRes(data) {
         device.log("doSetNode");
+      console.log(data);
+        var DestAddr = Utils.toHex(data.slice(1, 3));
+        var DestEndPoint = data[3];
+      var clusterID = Utils.toHex(data.slice(4, 6));
+                                  var attrID = Utils.toHex(data.slice(10, 12));
+        var childCMD = clusterID + attrID;
+        device.log("childCMD:" + childCMD);
+        switch (childCMD) {
+            case "00000400":
+                this.doSetNodeName(DestAddr, data.slice(14, 31));
+                break;
+            case "00600200":
+                break; //set node light ok
+        }
+    }
+    static doSetNodeName(DestAddr, dataArray) {
+        var lastIndex = dataArray.findIndex(function(e) {
+            return e === 0x20;
+        });
+        var nodeName = String.fromCharCode.apply(null, dataArray.slice(1, lastIndex + 1));
+      //device.log("lastIndex" + lastIndex.toString()+"nodeName"+nodeName + "data:"+ JSON.stringify(dataArray));
+        var node = findNodeByNwkAddr(DestAddr);
+        if (!node) {
+            return;
+        }
+        node.setNodeName(nodeName);
+      device.log(JSON.stringify(node));
+        saveNode(node, store.get('nodes'));
     }
     static doQueryNodeBindRes(data) {
         device.log("doQueryNodeBind");

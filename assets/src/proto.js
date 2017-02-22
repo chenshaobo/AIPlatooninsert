@@ -13,11 +13,11 @@ const protoType = {
     },
     SET_NODE_REQ: { //设置开关或者查询节点名称
         cmd: 0x2900,
-        name: 'NODE_INFO_REQ'
+        name: 'SET_NODE_REQ'
     },
     SET_NODE_RES: {
-        cmd: 0x4900,
-        name: 'NODE_INFO_RES'
+        cmd: 0x6980,
+        name: 'SET_NODE_RES'
     },
     QUERY_NODE_BIND_REQ: {
         cmd: 0x2533,
@@ -85,29 +85,29 @@ class Proto {
                 break;
             case protoType.SET_NODE_RES.cmd:
                 tmp = protoType.SET_NODE_RES;
-            result = Controller.doSetNodeRes(data);
+                result = Controller.doSetNodeRes(data);
                 break;
             case protoType.QUERY_NODE_BIND_REQ.cmd:
                 tmp = protoType.QUERY_NODE_BIND_REQ;
                 break;
             case protoType.SET_NODE_RES.cmd:
                 tmp = protoType.SET_NODE_RES;
-            result = Controller.doQueryNodeBindRes(data);
+                result = Controller.doQueryNodeBindRes(data);
 
                 break;
             case protoType.SET_NODE_UNBIND_RES.cmd:
                 tmp = protoType.SET_NODE_BIND_RES;
-            result = Controller.doSetNodeBindRes(data);
+                result = Controller.doSetNodeBindRes(data);
                 break;
             case protoType.SET_NODE_UNBIND_REQ.cmd:
                 tmp = protoType.SET_NODE_BIND_REQ;
                 break;
-        case protoType.QUERY_NODE_BIND_REQ.cmd:
-            tmp = protoType.QUERY_NODE_BIND_REQ;
-            break;
+            case protoType.QUERY_NODE_BIND_REQ.cmd:
+                tmp = protoType.QUERY_NODE_BIND_REQ;
+                break;
             case protoType.QUERY_NODE_BIND_RES.cmd:
                 tmp = protoType.QUERY_NODE_BIND_RES;
-            result= Controller.doQueryNodeBindRes(date);
+                result = Controller.doQueryNodeBindRes(date);
                 break;
         }
         device.log("DoHandle: " + JSON.stringify(tmp));
@@ -130,7 +130,7 @@ class Proto {
     static handleBase64(base64) {
         return this.handle(Utils.Base64ToByteArray(base64));
     }
-    static handleHex(hex){
+    static handleHex(hex) {
         return this.handle(Utils.hexToBytes(hex));
     }
     static marshal(cmd, cb) {
@@ -143,13 +143,13 @@ class Proto {
         }
         msg.UInt8(0); //fcs
         var buffer = msg.make();
+        var len = buffer.length;
+        buffer[1] = len - 5;
         var xorResult = 0;
-        for (var i = 4; i < buffer.length - 1; i++) {
+        for (var i = 1; i < len - 1; i++) {
             xorResult = buffer[i] ^ xorResult;
         }
-      var len = buffer.length;
-        buffer[len-1] = xorResult;
-        buffer[1] = len - 5;
+        buffer[len - 1] = xorResult;
         return buffer;
     }
 }

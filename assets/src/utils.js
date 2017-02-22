@@ -44,5 +44,8 @@ class Utils {
         }
         return s;
     }
+  static bin2String(array){
+    
+  }
 }
 export default Utils;

@@ -8,11 +8,13 @@ class Node {
     constructor({
         ieeeAddr,
         nwkAddr,
-        childNodes = []
+      childNodes = [],
+      nodeName =""
     } = {}) {
         this.ieeeAddr = ieeeAddr;
         this.nwkAddr = nwkAddr;
         this.childNodes = childNodes;
+      this.nodeName = nodeName;
     }
     static getNwkAddrInt(nwkAddrArray) {
         return (nwkAddrArray[0] << 8) + nwkAddrArray[1];
@@ -52,6 +54,9 @@ class Node {
             msg.UInt16BE(0x0400);
         });
     }
+  setNodeName(nodeName){
+    this.nodeName = nodeName;
+  }
 }
 
 export default Node;

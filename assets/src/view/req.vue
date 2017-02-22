@@ -75,6 +75,7 @@ var localStore = require('store');
 		  var result = Proto.handle(byteArray);
 		var result1= Proto.handleBase64(v);
           var queryNodesRes = Proto.handleHex("FE134581001239FC0A004B120000000003F7EE5BD7DBA5BB");
+        Proto.handleHex("FE1F6980FD0000FD000018180001040000421047617465776179202020202020202020D9");
 	        window.alert("单元测试ok");
 	    }
         }
