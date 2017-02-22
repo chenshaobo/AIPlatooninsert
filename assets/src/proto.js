@@ -11,7 +11,7 @@ const protoType = {
         cmd: 0x4581,
         name: 'QUERY_NODES_REQ'
     },
-    SET_NODE_REQ: {
+    SET_NODE_REQ: { //设置开关或者查询节点名称
         cmd: 0x2900,
         name: 'NODE_INFO_REQ'
     },
@@ -142,13 +142,14 @@ class Proto {
             cb(msg);
         }
         msg.UInt8(0); //fcs
-        console.log(msg);
         var buffer = msg.make();
         var xorResult = 0;
         for (var i = 4; i < buffer.length - 1; i++) {
             xorResult = buffer[i] ^ xorResult;
         }
-        buffer[i + 1] = xorResult;
+      var len = buffer.length;
+        buffer[len-1] = xorResult;
+        buffer[1] = len - 5;
         return buffer;
     }
 }

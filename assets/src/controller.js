@@ -5,7 +5,9 @@ import Utils from "./utils.js";
 import Proto from "./proto.js";
 import Node from "./node.js";
 import Bus from "./bus.js";
-import {findNodeByIeeeAddr} from "./vuex/store.js";
+import {
+    findNodeByIeeeAddr
+} from "./vuex/store.js";
 var id = 100004100;
 var regReceive = false;
 class Controller {
@@ -17,14 +19,14 @@ class Controller {
             }
         });
     }
-    static sendCMD(cmd,cb){
-        this.send(Proto.marshal(cmd,cb));
+    static sendCMD(cmd, cb) {
+        this.send(Proto.marshal(cmd, cb));
     }
     static sendHex(val) {
         var dataArray = Utils.hexToBytes(val);
         this.send(dataArray);
     }
-    static send(dataArray){
+    static send(dataArray) {
         device.log("send:" + Utils.toHexString(dataArray));
         if (!regReceive) {
             this.receive();
@@ -75,48 +77,53 @@ class Controller {
             }
         });
     }
-    static doSaveNode(data){
+    static doSaveNode(data) {
         device.log("doSaveNodes:" + JSON.stringify(data));
-        status = data[0] ;
-        if (status == 0x00){
-            //@todo get local node
- 
-            var ieeeAddr = Utils.toHex(data.slice(1,9));
-            var nwkAddr = Utils.toHex(data.slice(9,11));
+        status = data[0];
+        if (status == 0x00) {
+            var ieeeAddr = Utils.toHex(data.slice(1, 9));
+            var nwkAddr = Utils.toHex(data.slice(9, 11));
             var startIndex = data[11];
             var NumAssocDev = data[12];
             var node = findNodeByIeeeAddr(ieeeAddr);
-            device.log("local node is:" +JSON.stringify(node));
-            if (!node){
-                node = new Node({ieeeAddr: ieeeAddr,nwkAddr:nwkAddr});
+            device.log("local node is:" + JSON.stringify(node));
+            if (!node) {
+                node = new Node({
+                    ieeeAddr: ieeeAddr,
+                    nwkAddr: nwkAddr
+                });
             }
-            if (startIndex == 0){
+            if (startIndex == 0) {
                 node.childNodes = [];
             }
             var childNodes = new Array();
-            for (var i = 0;i < NumAssocDev;i++){
+            for (var i = 0; i < NumAssocDev; i++) {
                 var s = 13 + i;
-                var e = 13+i+2;
-                var childNwkAddr = Utils.toHex(data.slice(s,e));
-                var childNode =  new Node({ieeeAddr:[],nwkAddr:nwkAddr});
-                childNodes[i+startIndex] = childNwkAddr;
+                var e = 13 + i + 2;
+                var childNwkAddr = Utils.toHex(data.slice(s, e));
+                var childNode = new Node({
+                    ieeeAddr: [],
+                    nwkAddr: childNwkAddr
+                });
+                childNodes[i] = childNwkAddr;
                 //@todo queryChildNodes change to static func
                 childNode.queryChildNodes();
             }
             node.appendChildNodes(childNodes);
+            node.queryNodeName();
             //device.log("start add node" + JSON.stringify(node));
-            Bus.$emit('add-node',node);
+            Bus.$emit('add-node', node);
         }
         return [];
     }
-    static doSetNodeRes(data){
+    static doSetNodeRes(data) {
         device.log("doSetNode");
     }
-    static doQueryNodeBindRes(data){
+    static doQueryNodeBindRes(data) {
         device.log("doQueryNodeBind");
     }
-    static doSetNodeBindRes(data){
+    static doSetNodeBindRes(data) {
         device.log("doSetNodeBind");
     }
-    }
+}
 export default Controller;
