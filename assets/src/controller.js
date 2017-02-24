@@ -108,8 +108,8 @@ class Controller {
             }, TimeOut);
 
             for (var i = 0; i < NumAssocDev; i++) {
-                var s = 13 + i;
-                var e = 13 + i + 2;
+                var s = 13 + i*2;
+                var e = 13 + i*2 + 2;
                 var childNwkAddr = Utils.toHex(data.slice(s, e));
                 var childNode = new Node({
                     ieeeAddr: [],
@@ -145,7 +145,7 @@ class Controller {
         }
     }
     static doSetNodeName(DestAddr, dataArray) {
-        device.log("handle query node name res")
+      device.log("handle query node name res");
         var lastIndex = dataArray.findIndex(function(e) {
             return e === 0x20;
         });
