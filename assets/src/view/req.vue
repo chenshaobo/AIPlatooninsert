@@ -29,6 +29,7 @@
         setNodes
     } from "../vuex/action.js";
     import Bus from "../bus.js";
+
     var localStore = require('store');
     export default {
         name: 'req',
@@ -40,7 +41,7 @@
             },
         vuex: {
             getters: {
-                nodes: state => JSON.stringifg(state.nodes),
+                nodes: state => JSON.stringify(state.nodes),
             },
             actions: {
                 setNodes

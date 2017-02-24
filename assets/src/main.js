@@ -1,24 +1,27 @@
 import Vue from 'vue';
 import MintUI from 'mint-ui';
-import App from './App.vue';
-import './utils.js';
-import './controller.js';
-import Req from './view/req.vue';
+import 'mint-ui/lib/style.css'
 import Vuex from 'vuex';
+import VueRouter from 'vue-router';
 Vue.use(Vuex);
+Vue.use(VueRouter);
 Vue.use(MintUI);
 Vue.config.devtools = true;
 
-/*Vue.component(Tabbar.name,Tabbar);
-Vue.component(TabItem.name,TabItem);
-Vue.component(TabContainer.name,TabContainer);
-Vue.component(TabContainerItem.name,TabContainerItem);
-Vue.component(Button.name, Button);
-Vue.component(Field.name, Field);
-*/
+import app from './app.vue';
+import req from './view/req.vue';
 
-new Vue({
-  el: '#req',
-  render: h => h(Req)
+
+const routes = [{
+    path: '/req',
+    component: req
+}];
+const router = new VueRouter({
+    linkActiveClass: 'active',
+    routes
 });
-
+new Vue({
+    el: 'app',
+    render: h => h(app),
+    router
+});

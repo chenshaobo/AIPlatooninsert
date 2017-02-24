@@ -1,0 +1,10 @@
+[
+  {
+    "title": "智能排插",
+    "list": [
+      {
+        "path": "/req",
+        "name": "Toast",
+        "icon": "toast"
+      }]}
+]

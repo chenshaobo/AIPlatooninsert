@@ -28,6 +28,7 @@ class Controller {
     }
     static sendHex(val) {
         var dataArray = Utils.hexToBytes(val);
+      console.log("send:",dataArray);
         this.send(dataArray);
     }
     static send(dataArray) {
