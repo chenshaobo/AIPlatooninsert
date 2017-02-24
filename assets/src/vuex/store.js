@@ -66,7 +66,7 @@ export var saveNode = function(node,nodes){
 export var saveNodeDefault = function(node){
    var  nodes = store.get('nodes');
   saveNode(node,nodes);
-}
+};
 const actions = {};
 export default new Vuex.Store({
     state,

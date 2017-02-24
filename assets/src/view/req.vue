@@ -33,8 +33,7 @@
     export default {
         name: 'req',
         store: store,
-        data() {
-            return {
+        data: {
                 customHex: ""
             }
         },

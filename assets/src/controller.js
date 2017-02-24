@@ -13,6 +13,7 @@ import {
 var store = require('store');
 var id = 100004100;
 var regReceive = false;
+const TimeOut = 300; //300ms
 class Controller {
     static checkApi() {
         device.checkApi({
@@ -81,7 +82,7 @@ class Controller {
         });
     }
     static doSaveNode(data) {
-        device.log("doSaveNodes:" + JSON.stringify(data));
+        device.log("handle query nodes res:" + JSON.stringify(data));
         //@todo use binary libray to parse
         status = data[0];
         if (status == 0x00) {
@@ -101,6 +102,11 @@ class Controller {
                 node.childNodes = [];
             }
             var childNodes = new Array();
+            node.queryNodeBindTables();
+            setTimeout(() => {
+                node.queryNodeName();
+            }, TimeOut);
+
             for (var i = 0; i < NumAssocDev; i++) {
                 var s = 13 + i;
                 var e = 13 + i + 2;
@@ -111,18 +117,18 @@ class Controller {
                 });
                 childNodes[i] = childNwkAddr;
                 //@todo queryChildNodes change to static func
-                childNode.queryChildNodes();
+                setTimeout(() => {
+                    childNode.queryChildNodes();
+                }, TimeOut * (i+1));
             }
             node.appendChildNodes(childNodes);
-            node.queryNodeName();
-            node.queryNodeBindTables();
             device.log("SAVE NODE:" + JSON.stringify(node));
-           Bus.$emit('add-node', node);
+            Bus.$emit('add-node', node);
         }
         return [];
     }
     static doSetNodeRes(data) {
-        device.log("doSetNode");
+        device.log("handle set node res");
         //console.log(data);
         var DestAddr = Utils.toHex(data.slice(1, 3));
         var DestEndPoint = data[3];
@@ -139,6 +145,7 @@ class Controller {
         }
     }
     static doSetNodeName(DestAddr, dataArray) {
+        device.log("handle query node name res")
         var lastIndex = dataArray.findIndex(function(e) {
             return e === 0x20;
         });
@@ -149,12 +156,12 @@ class Controller {
             return;
         }
         node.setNodeName(nodeName);
-        device.log("SET NODE NAME"+JSON.stringify(node));
-      saveNodeDefault(node);
+        device.log("SET NODE NAME" + JSON.stringify(node));
+        saveNodeDefault(node);
     }
     static doQueryNodeBindRes(data) {
-        device.log("doQueryNodeBind");
-        if (data[2] == 0) {
+        device.log("doQueryNodeBindRes:" + JSON.stringify(data));
+        if (data[2] === 0) {
             var nwkAddr = Utils.toHex(data.slice(0, 2));
             var node = findNodeByNwkAddr(nwkAddr);
             if (node) {
@@ -178,10 +185,10 @@ class Controller {
                         destEndPoint: destEndPoint
                     };
                 }
-              device.log("set bind tales"+JSON.stringify(node));
-              saveNodeDefault(node);
+                device.log("set bind tales" + JSON.stringify(node));
+                saveNodeDefault(node);
             } else {
-                window.alert("节点不存在")
+                window.alert("节点不存在");
             }
         }
     }

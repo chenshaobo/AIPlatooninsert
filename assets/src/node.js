@@ -63,6 +63,9 @@ class Node {
       msg.UInt8(0x00);
     });
   }
+  bindNodeTo(srcEndpoint,destIeeeAddr,destEndpoint){
+    
+  }
   setNodeName(nodeName){
     this.nodeName = nodeName;
   }
