@@ -177,7 +177,7 @@ class Controller {
                     var srcAddr = Utils.toHex(data.slice(start, start + 9));
                     var srcEndPoint = data[start + 9];
                     var clusterID = Utils.toHex(data.slice(start + 10, start + 12));
-                    var destAddr = data.slice(start + 12, start + 21);
+                  var destAddr = Utils.toHex(data.slice(start + 12, start + 21));
                     var destEndPoint = data[start + 22];
                     node.bindTables[i] = {
                         srcIeeeAddr: srcAddr,
