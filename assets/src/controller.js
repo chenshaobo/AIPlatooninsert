@@ -121,7 +121,7 @@ class Controller {
                     return () => {
                         childnode.queryChildNodes();
                     };
-                })(childNode), TimeOut * (i + 1));
+                })(childNode), TimeOut * (i + 2));
             }
             node.appendChildNodes(childNodes);
             device.log("SAVE NODE:" + JSON.stringify(node));
