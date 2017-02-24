@@ -59,7 +59,7 @@
             handleClick() {
                 if (this.customHex != "") {
                     device.log("send custom data:" + this.customHex);
-                    Controller.sendHex(val);
+                    Controller.sendHex(this.customHex);
                 }
             },
             handleQueryNodes() {
