@@ -21,7 +21,6 @@ console.log("nodes", state.nodes);
 const mutations = {
     ['SAVE_NODE'](state, node) {
         saveNode(node,state.nodes);
-        device.log("save nodes" + JSON.stringify(state.nodes));
     },
     ['DELETE_NODE'](state, ieeeAddr) {
         var index = state.nodes.findIndex((node) => {
@@ -34,8 +33,7 @@ const mutations = {
 
 export var findNodeByIeeeAddr = function(ieeeAddr){
     var nodes = store.get('nodes');
-  device.log("findNodeByIeeeAddr nodes:"+JSON.stringify(nodes)+"ieeeAddr:" +ieeeAddr);
-    if (!nodes){
+     if (!nodes){
         return false;
     }
     var nodeData = nodes.find((e,index) =>{
@@ -45,7 +43,7 @@ export var findNodeByIeeeAddr = function(ieeeAddr){
 };
 export var findNodeByNwkAddr = function(nwkAddr){
   var nodes = store.get('nodes');
-  device.log("find node by nwkAddr,nodes:"+JSON.stringify(nodes)+"  nwkAddr:" +nwkAddr);
+  console.log(nodes);
   if (!nodes){
     return false;
   }
@@ -63,7 +61,11 @@ export var saveNode = function(node,nodes){
   });
   nodes.push(node);
   store.set('nodes', nodes);
-  device.log("save node result:",store.get('nodes'));
+  device.log("save node result:"+JSON.stringify(store.get('nodes')));
+};
+export var saveNodeDefault = function(node){
+   var  nodes = store.get('nodes');
+  saveNode(node,nodes);
 }
 const actions = {};
 export default new Vuex.Store({

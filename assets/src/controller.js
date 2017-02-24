@@ -6,7 +6,9 @@ import Proto from "./proto.js";
 import Node from "./node.js";
 import Bus from "./bus.js";
 import {
-  findNodeByIeeeAddr,findNodeByNwkAddr,saveNode
+    findNodeByIeeeAddr,
+    findNodeByNwkAddr,
+    saveNodeDefault
 } from "./vuex/store.js";
 var store = require('store');
 var id = 100004100;
@@ -113,21 +115,21 @@ class Controller {
             }
             node.appendChildNodes(childNodes);
             node.queryNodeName();
-
-            device.log("start add node" + JSON.stringify(node));
-            Bus.$emit('add-node', node);
+            node.queryNodeBindTables();
+            device.log("SAVE NODE:" + JSON.stringify(node));
+           Bus.$emit('add-node', node);
         }
         return [];
     }
     static doSetNodeRes(data) {
         device.log("doSetNode");
-      console.log(data);
+        //console.log(data);
         var DestAddr = Utils.toHex(data.slice(1, 3));
         var DestEndPoint = data[3];
-      var clusterID = Utils.toHex(data.slice(4, 6));
-                                  var attrID = Utils.toHex(data.slice(10, 12));
+        var clusterID = Utils.toHex(data.slice(4, 6));
+        var attrID = Utils.toHex(data.slice(10, 12));
         var childCMD = clusterID + attrID;
-        device.log("childCMD:" + childCMD);
+        // device.log("childCMD:" + childCMD);
         switch (childCMD) {
             case "00000400":
                 this.doSetNodeName(DestAddr, data.slice(14, 31));
@@ -140,18 +142,48 @@ class Controller {
         var lastIndex = dataArray.findIndex(function(e) {
             return e === 0x20;
         });
-        var nodeName = String.fromCharCode.apply(null, dataArray.slice(1, lastIndex + 1));
-      //device.log("lastIndex" + lastIndex.toString()+"nodeName"+nodeName + "data:"+ JSON.stringify(dataArray));
+        var nodeName = String.fromCharCode.apply(null, dataArray.slice(1, lastIndex));
+        //device.log("lastIndex" + lastIndex.toString()+"nodeName"+nodeName + "data:"+ JSON.stringify(dataArray));
         var node = findNodeByNwkAddr(DestAddr);
         if (!node) {
             return;
         }
         node.setNodeName(nodeName);
-      device.log(JSON.stringify(node));
-        saveNode(node, store.get('nodes'));
+        device.log("SET NODE NAME"+JSON.stringify(node));
+      saveNodeDefault(node);
     }
     static doQueryNodeBindRes(data) {
         device.log("doQueryNodeBind");
+        if (data[2] == 0) {
+            var nwkAddr = Utils.toHex(data.slice(0, 2));
+            var node = findNodeByNwkAddr(nwkAddr);
+            if (node) {
+                var startIndex = data[4];
+                var bindCount = data[5];
+                if (startIndex === 0) {
+                    node.bindTables = [];
+                }
+                for (var i = 0; i < bindCount; i++) {
+                    var start = i * 22 + 6;
+                    var srcAddr = Utils.toHex(data.slice(start, start + 9));
+                    var srcEndPoint = data[start + 9];
+                    var clusterID = Utils.toHex(data.slice(start + 10, start + 12));
+                    var destAddr = data.slice(start + 12, start + 21);
+                    var destEndPoint = data[start + 22];
+                    node.bindTables[i] = {
+                        srcIeeeAddr: srcAddr,
+                        srcEndPoint: srcEndPoint,
+                        clusterID: clusterID,
+                        destIeeeAddr: destAddr,
+                        destEndPoint: destEndPoint
+                    };
+                }
+              device.log("set bind tales"+JSON.stringify(node));
+              saveNodeDefault(node);
+            } else {
+                window.alert("节点不存在")
+            }
+        }
     }
     static doSetNodeBindRes(data) {
         device.log("doSetNodeBind");

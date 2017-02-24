@@ -12,11 +12,13 @@ class Node {
       nodeName =""
     } = {}) {
         this.ieeeAddr = ieeeAddr;
-        this.nwkAddr = nwkAddr;
+      this.nwkAddr = nwkAddr;
+      this.nwkAddrInt = Node.getNwkAddrInt(nwkAddr);
         this.childNodes = childNodes;
       this.nodeName = nodeName;
     }
-    static getNwkAddrInt(nwkAddrArray) {
+    static getNwkAddrInt(nwkAddr) {
+      var nwkAddrArray = Utils.hexToBytes(nwkAddr);
         return (nwkAddrArray[0] << 8) + nwkAddrArray[1];
     }
 
@@ -29,8 +31,7 @@ class Node {
 
     queryChildNodes() {
         var cmd = protoType.QUERY_NODES_REQ.cmd;
-        var nwkAddrArray = Utils.hexToBytes(this.nwkAddr);
-        var nwkAddrInt = Node.getNwkAddrInt(nwkAddrArray);
+        var nwkAddrInt = this.nwkAddrInt;
         Controller.sendCMD(cmd, function(msg) {
             msg.UInt16BE(nwkAddrInt);
             msg.UInt8(0x01);
@@ -40,7 +41,7 @@ class Node {
     queryNodeName() {
         //FE 0D 29 00 FD 00 00 FD 00 00 06 02 00 00 00 04 00 24
         var cmd = protoType.SET_NODE_REQ.cmd;
-        var nwkAddrInt = Node.getNwkAddrInt(this.nwkAddr);
+        var nwkAddrInt = this.nwkAddrInt;
         Controller.sendCMD(cmd, function(msg) {
             msg.UInt8(0xFD); //AppEndPoint
             msg.UInt16BE(nwkAddrInt); //nwkAddr
@@ -54,6 +55,14 @@ class Node {
             msg.UInt16BE(0x0400);
         });
     }
+  queryNodeBindTables(){
+    var cmd = protoType.QUERY_NODE_BIND_REQ.cmd;
+    var nwkAddrInt = this.nwkAddrInt;
+    Controller.sendCMD(cmd,function(msg){
+      msg.UInt16BE(nwkAddrInt);
+      msg.UInt8(0x00);
+    });
+  }
   setNodeName(nodeName){
     this.nodeName = nodeName;
   }

@@ -9,7 +9,7 @@ const protoType = {
     },
     QUERY_NODES_RES: {
         cmd: 0x4581,
-        name: 'QUERY_NODES_REQ'
+        name: 'QUERY_NODES_RES'
     },
     SET_NODE_REQ: { //设置开关或者查询节点名称
         cmd: 0x2900,
@@ -24,7 +24,7 @@ const protoType = {
         name: 'QUERY_NODE_BIND_REQ'
     },
     QUERY_NODE_BIND_RES: {
-        cmd: 0x4583,
+        cmd: 0x45B3,
         name: 'QUERY_NODE_BIND_RES'
     },
     SET_NODE_BIND_REQ: {
@@ -33,7 +33,7 @@ const protoType = {
     },
     SET_NODE_BIND_RES: {
         cmd: 0x45A1,
-        name: 'SET_NODE_BIND_REQ'
+        name: 'SET_NODE_BIND_RES'
     },
     SET_NODE_UNBIND_REQ: {
         cmd: 0x2522,
@@ -64,9 +64,9 @@ class Proto {
         for (var i = 1; i < byteAarray.length - 1; i++) {
             xorResult = byteAarray[i] ^ xorResult;
         }
-        console.log("xorResult = " + xorResult,
-            "length= " + byteAarray.length,
-            "orgin = " + byteAarray[byteAarray.length - 1]);
+        //console.log("xorResult = " + xorResult,
+        //    "length= " + byteAarray.length,
+         //   "orgin = " + byteAarray[byteAarray.length - 1]);
         return xorResult == byteAarray[i + 1];
     }
     static doHandle(cmd, data) {
@@ -107,21 +107,20 @@ class Proto {
                 break;
             case protoType.QUERY_NODE_BIND_RES.cmd:
                 tmp = protoType.QUERY_NODE_BIND_RES;
-                result = Controller.doQueryNodeBindRes(date);
+                result = Controller.doQueryNodeBindRes(data);
                 break;
         }
         device.log("DoHandle: " + JSON.stringify(tmp));
         return result;
     }
     static handle(byteArray) {
-        console.log(byteArray);
         if (byteArray[0] != startFrame) {
             throw 'Data not start with SOF';
         }
         if (this.checkFCS(byteArray)) {
             throw 'FCS not match';
         }
-        console.log("handle raw data:", byteArray);
+        //console.log("handle raw data:", byteArray);
         var len = byteArray[1];
         var cmd = (byteArray[2] << 8) + byteArray[3];
         var data = byteArray.slice(4, 4 + len);

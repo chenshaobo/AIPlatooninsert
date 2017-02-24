@@ -9,7 +9,6 @@
 	<mt-button @click.native="handleQueryNodes">查询节点列表</mt-button>
 	<p id="nodeList">{{ nodes }} </p>
 	</div>
-  
 	<div class="page-part">
 	    <mt-button @click.native="handleTestFunc">单元测试</mt-button>
 	    </div>
@@ -24,11 +23,13 @@
 <script>
     import Utils from "../utils.js";
     import Controller from '../controller.js';
-   import Proto from "../proto.js";
-import store from "../vuex/store.js";
-import {setNodes} from "../vuex/action.js";
-import Bus from "../bus.js";
-var localStore = require('store');
+    import Proto from "../proto.js";
+    import store from "../vuex/store.js";
+    import {
+        setNodes
+    } from "../vuex/action.js";
+    import Bus from "../bus.js";
+    var localStore = require('store');
     export default {
         name: 'req',
         store: store,
@@ -36,26 +37,25 @@ var localStore = require('store');
             return {
                 customHex: ""
             }
-            
         },
-        vuex:{
+        vuex: {
             getters: {
                 nodes: state => JSON.stringifg(state.nodes),
-                },
-            actions:{
+            },
+            actions: {
                 setNodes
             }
         },
         methods: {
-            saveNodes(){
-                Bus.$on('add-node',function(node){
-                    store.commit('SAVE_NODE',node);
+            saveNodes() {
+                Bus.$on('add-node', function(node) {
+                    store.commit('SAVE_NODE', node);
                 });
-                },
-            handleClear(){
+            },
+            handleClear() {
                 localStore.clear();
                 device.log("清除本地数据成功");
-                },
+            },
             handleClick() {
                 if (this.customHex != "") {
                     device.log("send custom data:" + this.customHex);
@@ -63,21 +63,21 @@ var localStore = require('store');
                 }
             },
             handleQueryNodes() {
-                localStore.clear();
                 Controller.sendHex("FE0425010000010021");
                 this.saveNodes();
             },
-	    handleTestFunc(){
-       localStore.clear();
-       this.saveNodes();
-		  var v = "/gQlAQAAAQAh";
-	          var byteArray = Utils.Base64ToByteArray(v);
-		  var result = Proto.handle(byteArray);
-		var result1= Proto.handleBase64(v);
-          var queryNodesRes = Proto.handleHex("FE134581001239FC0A004B120000000003F7EE5BD7DBA5BB");
-        Proto.handleHex("FE1F6980FD0000FD000018180001040000421047617465776179202020202020202020D9");
-	        window.alert("单元测试ok");
-	    }
+            handleTestFunc() {
+                //localStore.clear();
+                this.saveNodes();
+                var v = "/gQlAQAAAQAh";
+                var byteArray = Utils.Base64ToByteArray(v);
+                var result = Proto.handle(byteArray);
+                var result1 = Proto.handleBase64(v);
+                var queryNodesRes = Proto.handleHex("FE134581001239FC0A004B120000000003F7EE5BD7DBA5BB");
+                Proto.handleHex("FE1F6980FD0000FD000018180001040000421047617465776179202020202020202020D9");
+                Proto.handleHex("FE0645B300008B0000007B");
+                window.alert("单元测试ok");
+            }
         }
     }
 </script>
