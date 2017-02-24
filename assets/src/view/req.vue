@@ -33,10 +33,11 @@
     export default {
         name: 'req',
         store: store,
-        data: {
-                customHex: ""
-            }
-        },
+        data:function() {
+              return {
+              customHex: ""
+              }
+            },
         vuex: {
             getters: {
                 nodes: state => JSON.stringifg(state.nodes),
