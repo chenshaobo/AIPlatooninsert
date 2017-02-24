@@ -1,11 +1,12 @@
 import Vue from 'vue';
 import MintUI from 'mint-ui';
-import 'mint-ui/lib/style.css'
+import 'mint-ui/lib/style.css';
 import Vuex from 'vuex';
 import VueRouter from 'vue-router';
 Vue.use(Vuex);
 Vue.use(VueRouter);
 Vue.use(MintUI);
+Vue.component();
 Vue.config.devtools = true;
 
 import app from './app.vue';
@@ -20,7 +21,7 @@ const router = new VueRouter({
     linkActiveClass: 'active',
     routes
 });
-new Vue({
+new Vue({ 
     el: 'app',
     render: h => h(app),
     router
