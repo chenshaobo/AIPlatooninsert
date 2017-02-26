@@ -11,17 +11,15 @@ Vue.config.devtools = true;
 
 import app from './app.vue';
 import req from './view/req.vue';
+import myhome from './view/myhome.vue';
 
-
-const routes = [{
-    path: '/req',
-    component: req
-}];
+const routes = [{ path: '/req',component: req},
+                {path :'/myhome',component:myhome}];
 const router = new VueRouter({
     linkActiveClass: 'active',
     routes
 });
-new Vue({ 
+new Vue({
     el: 'app',
     render: h => h(app),
     router

@@ -1,15 +1,14 @@
 <template>
   <div class="page-tabbar">
     <div class="page-wrap">
-      <mt-tab-container class="page-tabbar-container" v-model="selected">
+      <mt-tab-container class="page-tabbar-container" v-model="selected" swipeable="true">
         <mt-tab-container-item id="myhome">
+          <myhome></myhome>
         </mt-tab-container-item>
         <mt-tab-container-item id="devices">
         </mt-tab-container-item>
         <mt-tab-container-item id="discovery">
-          <div class="page-part">
              <req></req>
-          </div>
         </mt-tab-container-item>
         <mt-tab-container-item id="my">
           </mt-tab-container-item>
@@ -22,7 +21,7 @@
         我家
       </mt-tab-item>
       <mt-tab-item id="devices">
-        <img slot="icon" src222="./assets/devices.png">
+        <img slot="icon" src="./assets/devices.png">
         设备
       </mt-tab-item>
       <mt-tab-item id="discovery">
@@ -39,26 +38,34 @@
 
 <script>
   import req from "./view/req.vue";
+  import myhome from "./view/myhome.vue";
     export default {
         data() {
             return {
-                selected: '我的'
+                selected: 'myhome'
             };
         },
       components:{
-           req
+           req,myhome
         }
     };
 </script>
 
 <style>
+  body{
+   margin:0px;
+  }
   .page-tabbar {
+    background-color: #f5f5f5;
     overflow: hidden;
     height: 100vh;
+    width: 100vw;
+    margin: 0px;
   }
   .page-wrap {
     overflow: auto;
     height: 100%;
-    padding-bottom: 100px;
+    width: 100%;
+    padding-bottom: 30vh;
   }
 </style>
