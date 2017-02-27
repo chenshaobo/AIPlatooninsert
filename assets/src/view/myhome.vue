@@ -8,16 +8,15 @@
 
     <div id="pattern" class="page-part border">
       <div class="page-part-tittle">
-      <a class="page-tittle"> 模式 
-        <img align="right"  src="../assets/pattern_add_btn.png" width="25" height="25"></a>
+        <span class="page-tittle"> 模式 </span>
+        <img class="button-add" src="../assets/pattern_add_btn.png" width="25" height="25">
       </div>
     </div>
 
     <div id="connect" class="page-part border">
       <div class="page-part-tittle">
-        <a class="page-tittle"> 高级联动 <img align="right"  src="../assets/pattern_add_btn.png" width="25" height="25"></a>
-
-        </a>
+        <span class="page-tittle"> 模式 </span>
+        <img class="button-add" src="../assets/pattern_add_btn.png" width="25" height="25">
       </div>
     </div>
    </div>
@@ -42,13 +41,6 @@
   width: 100vw;
   background-color: white;
 }
-/*#temperature{
-  background-image: url(../assets/temperature_bg.jpg) ; 
-  -webkit-background-size: cover;
-  -moz-background-size: cover;
-  -o-background-size: cover;
-  background-size: cover;
-}*/
 .page-part-tittle{
   padding-left:3vw;
   padding-right:3vw;
@@ -56,6 +48,10 @@
   width:93%;
   height: 30%;
 }
+.button-add{
+   display: inline-block;
+				float: right;
+ }
 .border {
   margin-bottom: 3vh;
   border-radius:20px;
