@@ -11,6 +11,9 @@
         <span class="page-tittle"> 模式 </span>
         <img class="button-add" src="../assets/pattern_add_btn.png" width="25" height="25">
       </div>
+      <div class="page-content">
+        
+      </div>
     </div>
 
     <div id="connect" class="page-part border">
