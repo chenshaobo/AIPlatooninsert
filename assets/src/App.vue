@@ -1,7 +1,7 @@
 <template>
   <div class="page-tabbar">
     <div class="page-wrap">
-      <mt-tab-container class="page-tabbar-container" v-model="selected" swipeable="true">
+      <mt-tab-container class="page-tabbar-container" v-model="selected" :swipeable="true">
         <mt-tab-container-item id="myhome">
           <myhome></myhome>
         </mt-tab-container-item>
@@ -56,8 +56,8 @@
    margin:0px;
   }
   .page-tabbar {
-    background-color: #f5f5f5;
-    overflow: hidden;
+    background-color: #e7e7e7;
+    overflow: scroll;
     height: 100vh;
     width: 100vw;
     margin: 0px;

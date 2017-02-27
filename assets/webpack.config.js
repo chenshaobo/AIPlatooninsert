@@ -48,13 +48,19 @@ module.exports = {
     historyApiFallback: true,
     noInfo: true,
       host: '127.0.0.1',
-      port: 8080
+    port: 8080,
+    proxy:{
+      '/api/*':{
+        target: 'http://localhost:8081',
+        secure: false
+      }
+    }
   },
   devtool: '#eval-source-map'
 }
 
 if (process.env.NODE_ENV === 'production') {
-  module.exports.devtool = '#source-map'
+  module.exports.devtool = '#source-map';
   // http://vue-loader.vuejs.org/en/workflow/production.html
   module.exports.plugins = (module.exports.plugins || []).concat([
     new webpack.DefinePlugin({
